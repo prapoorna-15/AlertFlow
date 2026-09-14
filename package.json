@@ -1,0 +1,20 @@
+{
+  "name": "alertflow",
+  "version": "1.0.0",
+  "description": "-Report civic problems. Track resolution. Stay safe — all in one platform.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prapoorna-15/AlertFlow.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prapoorna-15/AlertFlow/issues"
+  },
+  "homepage": "https://github.com/prapoorna-15/AlertFlow#readme"
+}
