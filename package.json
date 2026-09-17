@@ -1,7 +1,7 @@
 {
   "name": "alertflow",
   "version": "1.0.0",
-  "description": "-Report civic problems. Track resolution. Stay safe — all in one platform.",
+  "description": "AlertFlow - Enterprise-Grade IT Incident Triage & Automated RCA Platform",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

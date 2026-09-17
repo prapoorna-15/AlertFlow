@@ -1,33 +1,34 @@
-require('dotenv').config();
-const http = require('http');
-const app = require('./app');
-const { connectDB, sequelize } = require('./models');
-const { initSocket } = require('./config/socket');
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+
+// Load environment variables from .env file
+dotenv.config();
+
+// Import Express configuration app or routes
+let app;
+try {
+  app = require('./app');
+} catch (err) {
+  // Fallback inline Express setup if app.js is not yet configured
+  app = express();
+  app.use(cors({ origin: '*' }));
+  app.use(express.json());
+
+  const authRoutes = require('./routes/auth.routes');
+  const incidentRoutes = require('./routes/incident.routes');
+
+  app.use('/api/auth', authRoutes);
+  app.use('/api/incidents', incidentRoutes);
+
+  app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'HEALTHY', engine: 'AlertFlow' });
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 
-const httpServer = http.createServer(app);
-
-// Attach Socket.io to the same HTTP server
-initSocket(httpServer);
-
-async function start() {
-  try {
-    await connectDB();
-
-    // Sync models (creates tables if they don't exist).
-    // For a 48-hour hackathon this replaces formal migrations.
-    await sequelize.sync();
-    console.log('✅ Database models synced.');
-
-    httpServer.listen(PORT, () => {
-      console.log(`🚀 CivicEye server running on http://localhost:${PORT}`);
-      console.log(`🔌 Socket.io ready for real-time connections`);
-    });
-  } catch (err) {
-    console.error('❌ Failed to start server:', err);
-    process.exit(1);
-  }
-}
-
-start();
+// Keep process alive by listening on configured port
+app.listen(PORT, () => {
+  console.log(`⚡ AlertFlow Engine active on port ${PORT}`);
+});

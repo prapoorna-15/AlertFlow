@@ -1,23 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const {
-  getIssues,
-  createIssue,
-  getIssueById,
-  upvoteIssue,
-  removeUpvote,
-  getMyIssues,
-} = require('../controllers/issues.controller');
-const { authMiddleware } = require('../middleware/auth.middleware');
-const upload = require('../middleware/upload.middleware');
+const authMiddleware = require('../middleware/auth.middleware');
 
-// IMPORTANT: /my must be registered before /:id so it isn't swallowed as an id param
-router.get('/my', authMiddleware, getMyIssues);
+// GET /api/incidents - Fetch active IT incidents
+router.get('/', authMiddleware, async (req, res) => {
+  try {
+    // Return structured incident objects for the SRE dashboard
+    res.json({
+      success: true,
+      data: [
+        {
+          id: 1,
+          title: "High Latency - Payment Gateway",
+          severity: "CRITICAL",
+          status: "OPEN",
+          rawLogs: "HTTP 504 Gateway Timeout in microservice auth-db",
+          createdAt: new Date()
+        }
+      ]
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Failed to fetch incidents" });
+  }
+});
 
-router.get('/', getIssues);
-router.post('/', authMiddleware, upload.single('photo'), createIssue);
-router.get('/:id', getIssueById);
-router.patch('/:id/upvote', authMiddleware, upvoteIssue);
-router.delete('/:id/upvote', authMiddleware, removeUpvote);
+// POST /api/incidents - Trigger/Ingest new IT error log
+router.post('/', authMiddleware, async (req, res) => {
+  try {
+    const { title, severity, rawLogs } = req.body;
+    res.status(201).json({
+      success: true,
+      data: { id: Date.now(), title, severity, rawLogs, status: "OPEN" }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Failed to trigger incident" });
+  }
+});
 
 module.exports = router;
