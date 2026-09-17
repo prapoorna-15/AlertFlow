@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { getIO } = require('../config/socket');
 
-// GET /api/incidents - Fetch all active server incidents
+// GET /api/incidents
 router.get('/', async (req, res) => {
   try {
     res.json({
@@ -22,14 +23,16 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/incidents - Trigger new incident
+// POST /api/incidents - Broadcast incident live via WebSocket
 router.post('/', async (req, res) => {
   try {
     const { title, severity, rawLogs } = req.body;
-    res.status(201).json({
-      success: true,
-      data: { id: Date.now(), title, severity, rawLogs, status: 'OPEN' }
-    });
+    const newIncident = { id: Date.now(), title, severity, rawLogs, status: 'OPEN', createdAt: new Date() };
+
+    // Emit live WebSocket event
+    getIO().emit('INCIDENT_CREATED', newIncident);
+
+    res.status(201).json({ success: true, data: newIncident });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Failed to trigger incident' });
   }
