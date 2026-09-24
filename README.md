@@ -21,3 +21,18 @@ AlertFlow is an operational intelligence dashboard designed for SRE and DevOps e
 * **Backend:** Node.js, Express.js, Socket.IO, Sequelize ORM
 * **Database:** PostgreSQL (Supabase)
 * **Auth:** JWT, bcryptjs
+ 
+
+---
+
+## 🚀 Live Cloud Deployment
+
+AlertFlow is deployed across enterprise cloud infrastructure:
+
+- **Frontend Dashboard**: [https://alertflow-ui.onrender.com](https://alertflow-ui.onrender.com)
+- **Backend API & WebSockets**: [https://alertflow-api.onrender.com](https://alertflow-api.onrender.com)
+- **Database**: Managed PostgreSQL on Supabase
+
+### Health & API Verification
+- **Health Check**: `https://alertflow-api.onrender.com/health`
+- **Active Incidents API**: `https://alertflow-api.onrender.com/api/incidents`
